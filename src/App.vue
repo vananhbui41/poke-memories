@@ -6,6 +6,7 @@ import InteractScreen from "./components/InteractScreen.vue";
 import { shuffled } from "./utils/array";
 
 const statusMatch = ref("default");
+const timer = ref(0);
 const settings = reactive({
   totalOfBlocks: 0,
   cardsContext: [],
@@ -27,6 +28,13 @@ const onHandleBeforeStart = (config) => {
 
   statusMatch.value = "match";
 };
+const onShowResult = () => {
+  // get time
+  timer.value = new Date().getTime() - settings.startAt;
+
+  // switch to Result Componet
+  statusMatch.value = "result";
+}
 </script>
 
 <template>
@@ -37,5 +45,6 @@ const onHandleBeforeStart = (config) => {
   <interact-screen
     v-if="statusMatch === 'match'"
     :cardsContext="settings.cardsContext"
+    @onFinished="onShowResult()"
   />
 </template>

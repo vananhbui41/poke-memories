@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" :class="{ disabled: isDisabled }">
     <div
       class="card-inner"
       :class="{ 'is-flipped': isFlipped }"
@@ -31,9 +31,11 @@ const props = defineProps({
   },
 })
 const isFlipped = ref(false);
+const isDisabled = ref(false);
 
 const emit = defineEmits(['onFlip'])
 const onToggleFlipCard = () => {
+  if (isDisabled.value) return false;
   isFlipped.value = !isFlipped.value;
   if (isFlipped.value) {
     emit("onFlip", props.card);
@@ -42,9 +44,13 @@ const onToggleFlipCard = () => {
 const onFlipBackCard = () => {
   isFlipped.value = false;
 };
+const onDisableClick = () => {
+  isDisabled.value = true;
+};
 
 defineExpose({
   onFlipBackCard,
+  onDisableClick
 }); 
 </script>
 <style scoped>
@@ -94,4 +100,7 @@ defineExpose({
   width: 100%;
 }
 
+.card.disabled .card-innner{
+  cursor: false;
+}
 </style>

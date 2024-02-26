@@ -8,6 +8,7 @@ const props = defineProps({
     default: [],
   },
 });
+const emit = defineEmits(['onFinished']);
 const rules = ref([]);
 const cardRefs = ref([]);
 const setCardRef = (el, index) => {
@@ -23,8 +24,19 @@ const checkRules = (card) => {
   rules.value.push(card);
   if (rules.value.length == 2 && rules.value[0].value == rules.value[1].value) {
     console.log("True ...");
-    cardRefs.value[rules.value[0].index].disableClick();
-    cardRefs.value[rules.value[1].index].disableClick();
+
+    cardRefs.value[rules.value[0].index].onDisableClick();
+    cardRefs.value[rules.value[1].index].onDisableClick();
+
+    rules.value = [];
+
+    const disabledElement = document.querySelectorAll(".screen .card.disabled");
+    
+    if (disabledElement.length === props.cardsContext.length - 2) {
+      setTimeout(() => {
+        emit('onFinished');
+      },900)
+    }
   } else if (rules.value.length == 2 && rules.value[0].value != rules.value[1].value) {
     console.log("False...");
     setTimeout(() => {
