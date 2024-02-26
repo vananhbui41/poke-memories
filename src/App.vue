@@ -13,7 +13,6 @@ const settings = reactive({
 });
 
 const onHandleBeforeStart = (config) => {
-  console.log("running before start", config);
   settings.totalOfBlocks = config.totalOfBlocks;
   const firstCards = Array.from(
     { length: settings.totalOfBlocks / 2 },

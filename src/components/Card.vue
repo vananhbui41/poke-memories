@@ -12,7 +12,7 @@
         <div
           class="card-content"
           :style="{
-            backgroundImage: `url(${imgBackFaceUrl})`,
+            backgroundImage: `url(${props.imgBackFaceUrl})`,
           }"
         ></div>
       </div>
@@ -20,8 +20,11 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-defineProps({
+import { ref, defineExpose } from "vue";
+const props = defineProps({
+  card: {
+    type: [Number, Object]
+  },
   imgBackFaceUrl: {
     type: String,
     required: true,
@@ -29,10 +32,20 @@ defineProps({
 })
 const isFlipped = ref(false);
 
+const emit = defineEmits(['onFlip'])
 const onToggleFlipCard = () => {
   isFlipped.value = !isFlipped.value;
+  if (isFlipped.value) {
+    emit("onFlip", props.card);
+  }
+};
+const onFlipBackCard = () => {
+  isFlipped.value = false;
 };
 
+defineExpose({
+  onFlipBackCard,
+}); 
 </script>
 <style scoped>
 .card {
@@ -80,4 +93,5 @@ const onToggleFlipCard = () => {
   height: 100%;
   width: 100%;
 }
+
 </style>
