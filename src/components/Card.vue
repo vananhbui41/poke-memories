@@ -6,21 +6,33 @@
       @click="onToggleFlipCard()"
     >
       <div class="card-face card-face-front">
-        <div class="card-content">Front</div>
+        <div class="card-content"></div>
       </div>
       <div class="card-face card-face-back">
-        <div class="card-content">Back</div>
+        <div
+          class="card-content"
+          :style="{
+            backgroundImage: `url(${imgBackFaceUrl})`,
+          }"
+        ></div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
+defineProps({
+  imgBackFaceUrl: {
+    type: String,
+    required: true,
+  },
+})
 const isFlipped = ref(false);
 
 const onToggleFlipCard = () => {
   isFlipped.value = !isFlipped.value;
 };
+
 </script>
 <style scoped>
 .card {
@@ -51,8 +63,21 @@ const onToggleFlipCard = () => {
   padding: 1rem;
   box-shadow: 0 3px 10px 3px rgba(0, 0, 0, 0.2);
 }
+.card-face-front .card-content {
+  background: url("../assets/images/icon_back.png") no-repeat center center;
+  background-size: 40%;
+  height: 100%;
+  width: 100%;
+}
 .card-face-back {
   background-color: var(--light);
   transform: rotateY(-180deg);
+}
+.card-face-back .card-content {
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
 }
 </style>

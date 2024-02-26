@@ -3,11 +3,13 @@ import "./assets/styles/global.css";
 import { ref, reactive } from "vue";
 import MainScreen from "./components/MainScreen.vue";
 import InteractScreen from "./components/InteractScreen.vue";
+import { shuffled } from "./utils/array";
 
 const statusMatch = ref("default");
 const settings = reactive({
   totalOfBlocks: 0,
   cardsContext: [],
+  startAt: null,
 });
 
 const onHandleBeforeStart = (config) => {
@@ -17,7 +19,13 @@ const onHandleBeforeStart = (config) => {
     { length: settings.totalOfBlocks / 2 },
     (_, i) => i + 1
   );
-  console.log(firstCards);
+
+  const secondCards = [...firstCards];
+  const cards = [...firstCards, ...secondCards];
+  settings.cardsContext = shuffled(shuffled(shuffled(shuffled(cards))));
+  console.log(settings.cardsContext);
+  settings.startAt = new Date().getTime();
+
   statusMatch.value = "match";
 };
 </script>
@@ -27,5 +35,8 @@ const onHandleBeforeStart = (config) => {
     v-if="statusMatch === 'default'"
     @startGame="onHandleBeforeStart($event)"
   />
-  <interact-screen v-if="statusMatch === 'match'" />
+  <interact-screen
+    v-if="statusMatch === 'match'"
+    :cardsContext="settings.cardsContext"
+  />
 </template>
