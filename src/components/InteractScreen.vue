@@ -8,9 +8,10 @@ const props = defineProps({
     default: [],
   },
 });
-const emit = defineEmits(['onFinished']);
+const emit = defineEmits(["onFinished"]);
 const rules = ref([]);
 const cardRefs = ref([]);
+const disabledCardsCount = ref(0);
 const setCardRef = (el, index) => {
   cardRefs.value[index] = el;
 };
@@ -23,21 +24,23 @@ const checkRules = (card) => {
 
   rules.value.push(card);
   if (rules.value.length == 2 && rules.value[0].value == rules.value[1].value) {
-    console.log("True ...");
-
     cardRefs.value[rules.value[0].index].onDisableClick();
     cardRefs.value[rules.value[1].index].onDisableClick();
 
     rules.value = [];
 
-    const disabledElement = document.querySelectorAll(".screen .card.disabled");
-    
-    if (disabledElement.length === props.cardsContext.length - 2) {
+    // Check the count of disabled cards here
+    disabledCardsCount.value += 2;
+    if (disabledCardsCount.value === props.cardsContext.length) {
+      // All cards are disabled, emit event or execute further logic
       setTimeout(() => {
-        emit('onFinished');
-      },900)
+        emit("onFinished");
+      }, 900);
     }
-  } else if (rules.value.length == 2 && rules.value[0].value != rules.value[1].value) {
+  } else if (
+    rules.value.length == 2 &&
+    rules.value[0].value != rules.value[1].value
+  ) {
     console.log("False...");
     setTimeout(() => {
       console.log(cardRefs.value[rules.value[0].index]);
@@ -46,9 +49,8 @@ const checkRules = (card) => {
       cardRefs.value[rules.value[1].index].onFlipBackCard();
       rules.value = [];
     }, 800);
-
   } else return false;
-}
+};
 </script>
 <template>
   <div class="sceen">
@@ -56,7 +58,7 @@ const checkRules = (card) => {
     <card-flip
       v-for="(card, index) in props.cardsContext"
       :key="index"
-      :ref="el => setCardRef(el, index)"
+      :ref="(el) => setCardRef(el, index)"
       :imgBackFaceUrl="`src/assets/images/${card}.png`"
       :card="{ index, value: card }"
       @onFlip="checkRules($event)"

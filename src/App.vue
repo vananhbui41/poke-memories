@@ -3,6 +3,7 @@ import "./assets/styles/global.css";
 import { ref, reactive } from "vue";
 import MainScreen from "./components/MainScreen.vue";
 import InteractScreen from "./components/InteractScreen.vue";
+import ResultScreen from "./components/ResultScreen.vue";
 import { shuffled } from "./utils/array";
 
 const statusMatch = ref("default");
@@ -23,7 +24,6 @@ const onHandleBeforeStart = (config) => {
   const secondCards = [...firstCards];
   const cards = [...firstCards, ...secondCards];
   settings.cardsContext = shuffled(shuffled(shuffled(shuffled(cards))));
-  console.log(settings.cardsContext);
   settings.startAt = new Date().getTime();
 
   statusMatch.value = "match";
@@ -31,7 +31,7 @@ const onHandleBeforeStart = (config) => {
 const onShowResult = () => {
   // get time
   timer.value = new Date().getTime() - settings.startAt;
-
+  
   // switch to Result Componet
   statusMatch.value = "result";
 }
@@ -46,5 +46,9 @@ const onShowResult = () => {
     v-if="statusMatch === 'match'"
     :cardsContext="settings.cardsContext"
     @onFinished="onShowResult()"
+  />
+  <result-screen 
+    v-if="statusMatch === 'result'"
+    :timer="timer"
   />
 </template>
