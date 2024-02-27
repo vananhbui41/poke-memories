@@ -56,7 +56,6 @@ const checkRules = (card) => {
   <div
     class="screen"
   >
-    <h1>Interact Here</h1>
     <div class="screen-inner"
     :style="{
       width: `${

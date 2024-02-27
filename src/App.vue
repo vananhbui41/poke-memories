@@ -50,5 +50,6 @@ const onShowResult = () => {
   <result-screen 
     v-if="statusMatch === 'result'"
     :timer="timer"
+    @onStartAgain="statusMatch = 'default'"
   />
 </template>
