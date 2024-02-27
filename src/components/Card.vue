@@ -1,5 +1,14 @@
 <template>
-  <div class="card" :class="{ disabled: isDisabled }">
+  <div
+    class="card"
+    :class="{ disabled: isDisabled }"
+    :style="{
+      height: `${(920 - 16 * 4) / Math.sqrt(cardsContext.length) - 16}px`,
+      width: `${
+        (((920 - 16 * 4) / Math.sqrt(cardsContext.length) - 16) * 3) / 4
+      }px`,
+    }"
+  >
     <div
       class="card-inner"
       :class="{ 'is-flipped': isFlipped }"
@@ -23,17 +32,21 @@
 import { ref, defineExpose } from "vue";
 const props = defineProps({
   card: {
-    type: [Number, Object]
+    type: [Number, Object],
   },
   imgBackFaceUrl: {
     type: String,
     required: true,
   },
-})
+  cardsContext: {
+    type: Array,
+    default: [],
+  },
+});
 const isFlipped = ref(false);
 const isDisabled = ref(false);
 
-const emit = defineEmits(['onFlip'])
+const emit = defineEmits(["onFlip"]);
 const onToggleFlipCard = () => {
   if (isDisabled.value) return false;
   isFlipped.value = !isFlipped.value;
@@ -50,15 +63,14 @@ const onDisableClick = () => {
 
 defineExpose({
   onFlipBackCard,
-  onDisableClick
-}); 
+  onDisableClick,
+});
 </script>
 <style scoped>
 .card {
   display: inline-block;
   margin-right: 1rem;
   margin-bottom: 1rem;
-  width: 90px;
   height: 120px;
 }
 .card-inner {
@@ -84,7 +96,7 @@ defineExpose({
 }
 .card-face-front .card-content {
   background: url("../assets/images/icon_back.png") no-repeat center center;
-  background-size: 40%;
+  background-size: 60%;
   height: 100%;
   width: 100%;
 }
@@ -100,7 +112,7 @@ defineExpose({
   width: 100%;
 }
 
-.card.disabled .card-innner{
+.card.disabled .card-innner {
   cursor: false;
 }
 </style>

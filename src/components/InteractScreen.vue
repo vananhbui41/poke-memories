@@ -48,20 +48,48 @@ const checkRules = (card) => {
       cardRefs.value[rules.value[0].index].onFlipBackCard();
       cardRefs.value[rules.value[1].index].onFlipBackCard();
       rules.value = [];
-    }, 800);
+    }, 500);
   } else return false;
 };
 </script>
 <template>
-  <div class="sceen">
+  <div
+    class="screen"
+  >
     <h1>Interact Here</h1>
-    <card-flip
-      v-for="(card, index) in props.cardsContext"
-      :key="index"
-      :ref="(el) => setCardRef(el, index)"
-      :imgBackFaceUrl="`src/assets/images/${card}.png`"
-      :card="{ index, value: card }"
-      @onFlip="checkRules($event)"
-    />
+    <div class="screen-inner"
+    :style="{
+      width: `${
+        ((((920 - 16 * 4) / Math.sqrt(cardsContext.length) - 16) * 3) / 4 + 16)*Math.sqrt(cardsContext.length)
+      }px`,
+    }">
+      <card-flip
+        v-for="(card, index) in props.cardsContext"
+        :key="index"
+        :ref="(el) => setCardRef(el, index)"
+        :imgBackFaceUrl="`src/assets/images/${card}.png`"
+        :card="{ index, value: card }"
+        :cardsContext="props.cardsContext"
+        @onFlip="checkRules($event)"
+      />
+    </div>
   </div>
 </template>
+
+<style>
+.screen {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background: var(--dark);
+  color: var(--light);
+}
+.screen-inner {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 2rem auto;
+}
+</style>
